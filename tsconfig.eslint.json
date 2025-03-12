@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "include": [
+        "src/**/*.ts",
+        "*.ts",
+        "test/**/*.ts",
+        "email-templates/*.ts"
+    ],
+    "exclude": [
+        ".eslintrc.js"
+    ]
+}
