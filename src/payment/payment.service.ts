@@ -11,6 +11,8 @@ export class PaymentService {
   private provider: IPaymentProvider;
 
   async createCustomer(payload: CreateCustomerArgs): Promise<string> {
+    //TODO: The configuration will be handled here then pass as a agurment to create payment provider
+
     this.provider = PaymentProviderFactory.createPaymentProvider(
       PAYMENT_PROVIDER.STRIPE,
       { key: 'sk_test_uBGTTJUBftU0gagci6ooMCRd' },
