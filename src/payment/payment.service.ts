@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { IPaymentServiceAdapter } from './interface/payment-service.adapter';
-import { PaymentProvider } from './payment.provider';
+import { IPaymentProvider } from './interface/payment-provider.interface';
+import { PaymentProviderFactory } from './payment-provider-factory';
 import { CreateCustomerArgs } from './interface/create-customer.args';
 import { PAYMENT_PROVIDER } from './enum/payment-provider.enum';
 import { CustomerResponse } from './interface/customer-response.interface';
 
 @Injectable()
-export class PaymentService implements IPaymentServiceAdapter {
-  constructor(private provider: PaymentProvider) {}
+export class PaymentService {
+  constructor() {}
+  private provider: IPaymentProvider;
 
-  async createCustomer(payload: CreateCustomerArgs): Promise<any> {
-    const provider = this.provider.getPaymentProvider(PAYMENT_PROVIDER.STRIPE);
-    return await provider.createCustomer(payload);
+  async createCustomer(payload: CreateCustomerArgs): Promise<string> {
+    this.provider = PaymentProviderFactory.createPaymentProvider(
+      PAYMENT_PROVIDER.STRIPE,
+      { key: 'sk_test_uBGTTJUBftU0gagci6ooMCRd' },
+    );
+    this.provider.createCustomer(payload);
+    return await this.provider.createCustomer(payload);
   }
 
   addPaymentMethod: (paymentMethodId: string) => Promise<void>;

@@ -1,27 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { IPaymentServiceAdapter } from '../interface/payment-service.adapter';
+import { IPaymentProvider } from '../interface/payment-provider.interface';
 import { CreateCustomerArgs } from '../interface/create-customer.args';
 import Stripe from 'stripe';
 import { CustomerResponse } from '../interface/customer-response.interface';
 
-@Injectable()
-export class StripeService implements IPaymentServiceAdapter {
-  constructor() {}
-
+export class StripeProvider implements IPaymentProvider {
   private stripe: Stripe;
 
-  createStripeInstance() {
-    if (!this.stripe) {
-      this.stripe = new Stripe('sk_test_uBGTTJUBftU0gagci6ooMCRd', {
-        apiVersion: '2022-11-15',
-      });
-    }
-    return this.stripe;
+  constructor(config: any) {
+    this.stripe = new Stripe(config.key, {
+      apiVersion: '2022-11-15',
+    });
   }
 
   async createCustomer(payload: CreateCustomerArgs): Promise<string> {
     const { name, email } = payload;
-    const customer = await this.createStripeInstance().customers.create({
+    const customer = await this.stripe.customers.create({
       name,
       email,
     });
@@ -29,7 +22,7 @@ export class StripeService implements IPaymentServiceAdapter {
   }
 
   async getCustomer(customerId: string): Promise<CustomerResponse> {
-    const customer = (await this.createStripeInstance().customers.retrieve(
+    const customer = (await this.stripe.customers.retrieve(
       customerId,
     )) as Stripe.Customer;
     return {

@@ -1,7 +1,7 @@
 import { CreateCustomerArgs } from './create-customer.args';
 import { CustomerResponse } from './customer-response.interface';
 
-export interface IPaymentServiceAdapter {
+export interface IPaymentProvider {
   addPaymentMethod: (paymentMethodId: string) => Promise<void>;
   setDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
   removePaymentMethod: (paymentMethodId: string) => Promise<void>;
